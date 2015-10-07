@@ -1,8 +1,8 @@
 {
-  "host": "ekumail.eku.edu",
+  "host": "",
   "port": "25",
-  "smtp_from": "rpi@eku.edu",
-  "smtp_to": "michael.kates@eku.edu",
+  "smtp_from": "",
+  "smtp_to": "",
   "username": "",
   "password": "",
   "isGmail": "False",
