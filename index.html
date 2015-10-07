@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <!--Spinner-->
+    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/pulse.css" type="text/css">
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <title>Office Door</title>
+    <style>
+        .loader{
+            position:relative;
+            padding-top:50px;
+        }
+        #msg{
+            position: absolute;
+            top:65px;
+            left:70px;
+            font-size:20px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+          
+            <div class="col-sm-offset-3 col-sm-6">
+                <div class="loader">
+                    <div class="pulse-loader"></div> <span id="msg">Loading door state...</span>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row" style="padding-top:40px">
+             <div class="col-md-12">
+                 <form method="post" class="well" action="/doorAction">
+                     <input id="state" type="hidden" name="state" />
+
+                     <button id="actionBtnOpen" class="btn btn-primary btn-lg btn-block" type="submit"  value="">Open</button>
+                    <button id="actionBtnClose" class="btn btn-primary btn-lg btn-block" type="submit"  value="">Close</button>
+                 </form>
+             </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+        (function(){
+            var $status = $("#msg");
+            var $actionBtnClose = $("#actionBtnClose");
+            var $actionBtnOpen = $("#actionBtnOpen");
+            var $state = $("#state");
+            function updateView(data){
+
+                   if(data == "True"){
+                     //Door is open
+                     $status.text("The door is currently open");
+
+
+                   }
+                   else{
+                     //Door is closed
+                     $status.text("The door is shut");
+
+
+                   }
+            }
+             $actionBtnClose.click(function(){
+                $state.val("False")
+             });
+             $actionBtnOpen.click(function(){
+                $state.val("True")
+             });
+
+             $("form").submit(function(e){
+                    e.preventDefault();
+                    $.post("/doorAction",$(this).serialize(),function(data,status){
+                        updateView(data);
+                    });
+
+              });
+
+             setInterval(function () {
+                //Load up the state
+                $.get("/doorStatus", function(data, status){
+                    console.log(status);
+                    console.log(data);
+                    updateView(data);
+
+                });
+
+            },1000);
+        })()
+
+
+    </script>
+</body>
+</html>
